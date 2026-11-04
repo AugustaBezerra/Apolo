@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import styles from "./LoginCard.module.css";
 import { User, Lock, Eye, EyeOff, Sparkles, AlertCircle } from "lucide-react";
 
+import { supabase } from "@/lib/supabase";
+
 interface LoginCardProps {
   onLoginSuccess: (user: any) => void;
 }
@@ -21,19 +23,34 @@ export default function LoginCard({ onLoginSuccess }: LoginCardProps) {
     setCarregando(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ identifier, password }),
+      const emailToUse =
+        identifier.trim().toLowerCase() === "karine"
+          ? "cr.equipe02@gmail.com"
+          : identifier.trim();
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: emailToUse,
+        password: password,
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Falha na autenticação.");
+      if (error) {
+        throw new Error(error.message === "Invalid login credentials"
+          ? "Credenciais incorretas. Verifique seu usuário e senha."
+          : error.message);
       }
 
-      onLoginSuccess(data.user);
+      if (!data.user) {
+        throw new Error("Não foi possível autenticar o usuário.");
+      }
+
+      const userObj = {
+        id: data.user.id,
+        email: data.user.email,
+        name: data.user.user_metadata?.name || "Karine",
+        role: data.user.user_metadata?.role || "creator",
+      };
+
+      onLoginSuccess(userObj);
     } catch (err: any) {
       setErro(err.message || "Erro de conexão ao autenticar.");
     } finally {

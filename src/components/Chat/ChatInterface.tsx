@@ -5,6 +5,9 @@ import styles from "./ChatInterface.module.css";
 import Sidebar from "../Sidebar/Sidebar";
 import MessageBubble from "../MessageBubble/MessageBubble";
 import { Paperclip, Send, Settings, Sparkles } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+
+const CLOUD_RUN_API_URL = "https://apolo-api-979121346627.us-central1.run.app/chat";
 
 interface UserSession {
   id: string;
@@ -40,22 +43,21 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
   const [enviando, setEnviando] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // 1. Carrega histórico de conversas da Karine
+  // 1. Carrega histórico de conversas do Supabase
   useEffect(() => {
     carregarConversas();
   }, [user.id]);
 
-  // 2. Quando seleciona conversa, carrega as mensagens
+  // 2. Quando seleciona conversa, carrega as mensagens do Supabase
   useEffect(() => {
     if (activeConvId) {
       carregarMensagens(activeConvId);
     } else {
-      // Mensagem inicial de boas-vindas do Apolo
       setMessages([
         {
           id: "msg_welcome_1",
           role: "assistant",
-          content: `Olá, ${user.name}! ✨ Fico muito feliz em te ver por aqui!\n\nSou o Apolo, seu co-piloto de conteúdo e redes sociais. Como posso te apoiar hoje com as gravações do Dr. Cleverson (@drcleversonredivo)?`,
+          content: `Olá, ${user.name}! ✨ Fico muito feliz em te ver por aqui!\n\nSou o Apolo, seu copiloto estratégico de conteúdo e redes sociais. Como posso te apoiar hoje com as pautas e gravações do Dr. Cleverson (@drcleversonredivo)?`,
           created_at: new Date().toISOString(),
         },
       ]);
@@ -69,11 +71,22 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
 
   const carregarConversas = async () => {
     try {
-      const res = await fetch(`/api/history?userId=${user.id}`);
-      const data = await res.json();
-      if (data.conversations && data.conversations.length > 0) {
-        setConversations(data.conversations);
-        setActiveConvId(data.conversations[0].id);
+      const { data, error } = await supabase
+        .from("conversations")
+        .select("id, title, updated_at")
+        .eq("user_id", user.id)
+        .order("updated_at", { ascending: false });
+
+      if (error) {
+        console.error("Erro ao buscar conversas no Supabase:", error);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        setConversations(data);
+        if (!activeConvId) {
+          setActiveConvId(data[0].id);
+        }
       }
     } catch (e) {
       console.error("Erro ao carregar histórico:", e);
@@ -82,10 +95,19 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
 
   const carregarMensagens = async (convId: string) => {
     try {
-      const res = await fetch(`/api/chat?conversationId=${convId}`);
-      const data = await res.json();
-      if (data.messages && data.messages.length > 0) {
-        setMessages(data.messages);
+      const { data, error } = await supabase
+        .from("messages")
+        .select("id, role, content, created_at")
+        .eq("conversation_id", convId)
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        console.error("Erro ao buscar mensagens no Supabase:", error);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        setMessages(data as Message[]);
       } else {
         setMessages([
           {
@@ -109,41 +131,113 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
     setInputTexto("");
     setEnviando(true);
 
-    // Adiciona temporariamente a mensagem do usuário na tela
-    const tempUserMsg: Message = {
-      id: `temp_${Date.now()}`,
+    let convId = activeConvId;
+    let novaConversaCriada = false;
+
+    // Se não tiver conversa ativa, cria uma no Supabase
+    if (!convId) {
+      convId = `conv_${Date.now()}`;
+      const tituloInicial = textoLimpo.length > 30 ? textoLimpo.substring(0, 30) + "..." : textoLimpo;
+      
+      const { error: convErr } = await supabase.from("conversations").insert([
+        {
+          id: convId,
+          user_id: user.id,
+          title: tituloInicial,
+        },
+      ]);
+
+      if (convErr) {
+        console.error("Erro ao criar conversa no Supabase:", convErr);
+      } else {
+        novaConversaCriada = true;
+        setActiveConvId(convId);
+      }
+    }
+
+    // 1. Mensagem do usuário
+    const userMsgId = `msg_${Date.now()}_u`;
+    const userMsgObj: Message = {
+      id: userMsgId,
       role: "user",
       content: textoLimpo,
       created_at: new Date().toISOString(),
     };
-    setMessages((prev) => [...prev, tempUserMsg]);
+
+    setMessages((prev) => [...prev, userMsgObj]);
+
+    // Grava mensagem do usuário no Supabase
+    if (convId) {
+      await supabase.from("messages").insert([
+        {
+          id: userMsgId,
+          conversation_id: convId,
+          role: "user",
+          content: textoLimpo,
+        },
+      ]);
+    }
 
     try {
-      const res = await fetch("/api/chat", {
+      // 2. Chama a API do Vertex AI no Cloud Run (com CORS e proteção)
+      const historicoRecente = messages.slice(-6).map((m) => ({
+        role: m.role,
+        content: m.content,
+      }));
+
+      const res = await fetch(CLOUD_RUN_API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          conversationId: activeConvId,
-          userId: user.id,
-          userName: user.name,
           message: textoLimpo,
+          history: historicoRecente,
+          userName: user.name,
         }),
       });
 
       const data = await res.json();
-      if (res.ok && data.assistantMessage) {
-        if (!activeConvId && data.conversationId) {
-          setActiveConvId(data.conversationId);
-          carregarConversas();
-        }
-        setMessages((prev) => [
-          ...prev.filter((m) => m.id !== tempUserMsg.id),
-          data.userMessage,
-          data.assistantMessage,
+      const respostaTexto = data.reply || "Olá! Não consegui formular a resposta agora. Pode repetir?";
+
+      // 3. Mensagem do assistente
+      const assistMsgId = `msg_${Date.now()}_a`;
+      const assistMsgObj: Message = {
+        id: assistMsgId,
+        role: "assistant",
+        content: respostaTexto,
+        created_at: new Date().toISOString(),
+      };
+
+      setMessages((prev) => [...prev, assistMsgObj]);
+
+      // Grava resposta do Apolo no Supabase
+      if (convId) {
+        await supabase.from("messages").insert([
+          {
+            id: assistMsgId,
+            conversation_id: convId,
+            role: "assistant",
+            content: respostaTexto,
+          },
         ]);
+
+        await supabase
+          .from("conversations")
+          .update({ updated_at: new Date().toISOString() })
+          .eq("id", convId);
+      }
+
+      if (novaConversaCriada) {
+        carregarConversas();
       }
     } catch (err) {
-      console.error("Erro ao enviar mensagem:", err);
+      console.error("Erro ao comunicar com o Apolo Vertex AI:", err);
+      const erroMsg: Message = {
+        id: `err_${Date.now()}`,
+        role: "assistant",
+        content: "⚠️ Ops! Tive um pequeno soluço de conexão com o Vertex AI. Por favor, tente enviar novamente em instantes.",
+        created_at: new Date().toISOString(),
+      };
+      setMessages((prev) => [...prev, erroMsg]);
     } finally {
       setEnviando(false);
     }
@@ -190,7 +284,7 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
               <h2>Apolo</h2>
               <div className={styles.statusOnline}>
                 <span className={styles.dotOnline} />
-                <span>Online</span>
+                <span>Online (Vertex AI)</span>
               </div>
             </div>
           </div>
@@ -200,7 +294,7 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
               className={styles.btnAcao}
               title="Configurações do Apolo"
               onClick={() =>
-                alert("Painel do Apolo: Memória persistente ativada e conectada ao Vertex AI (Gemini).")
+                alert("Painel do Apolo: Memória persistente no Supabase e conectado ao Google Cloud Vertex AI (Gemini 2.5 Flash).")
               }
             >
               <Settings size={18} />
