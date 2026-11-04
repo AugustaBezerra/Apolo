@@ -4,12 +4,17 @@
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   background-color: #071E3D;
-  background-image: radial-gradient(circle at 50% 30%, #0F3460 0%, #071E3D 100%);
-  padding: 24px 16px;
+  background-image: var(--bg-panorama);
+  background-size: cover;
+  background-position: center left;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  padding: 40px clamp(24px, 6vw, 100px);
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* Card Principal em Paper Craft */
@@ -17,49 +22,48 @@
   position: relative;
   width: 100%;
   max-width: 440px;
-  min-height: 680px;
-  border-radius: 36px;
+  background-color: #FAF7EE;
+  border-radius: 32px;
   overflow: hidden;
   box-shadow: 
-    0 24px 60px rgba(0, 0, 0, 0.6),
-    0 4px 12px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
+    0 24px 60px rgba(0, 7, 20, 0.75),
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(253, 230, 138, 0.25);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  z-index: 10;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Background com a Arte Amazônica (Teatro, Barco, Rio, Boto) */
-.cardBackground {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: top center;
-  background-repeat: no-repeat;
-  z-index: 1;
+/* Camada de Background para Mobile (oculta no Desktop) */
+.cardBackgroundMobile {
+  display: none;
 }
 
-/* Conteúdo que sobrepõe a arte */
+/* Conteúdo do Card */
 .cardContent {
   position: relative;
   z-index: 5;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  padding: 34px 28px 24px;
+  width: 100%;
 }
 
-/* Header no Céu Estrelado */
+/* Header Superior no Céu Noturno */
 .headerSky {
+  background: linear-gradient(180deg, #071E3D 0%, #0B2C4E 100%);
+  padding: 34px 28px 24px;
   text-align: center;
-  margin-bottom: 75px;
+  border-bottom: 2px solid rgba(253, 230, 138, 0.25);
+  position: relative;
 }
 
 .starLogo {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 2px 8px rgba(253, 230, 138, 0.4));
 }
 
 .brandTitle {
@@ -85,15 +89,15 @@
 .dividerStar {
   color: #FDE68A;
   font-size: 12px;
-  margin-top: 4px;
-  opacity: 0.8;
+  margin-top: 6px;
+  opacity: 0.85;
 }
 
-/* Formulário na Área do Pergaminho */
+/* Seção de Formulário no Pergaminho */
 .formSection {
-  margin-top: auto;
+  padding: 28px 30px 28px;
+  background-color: #FAF7EE;
   text-align: center;
-  padding: 0 6px 6px;
 }
 
 .welcomeTitle {
@@ -105,10 +109,10 @@
 }
 
 .welcomeSubtitle {
-  font-size: 12px;
+  font-size: 13px;
   color: #475569;
-  line-height: 1.4;
-  margin: 0 0 8px;
+  line-height: 1.45;
+  margin: 0 0 12px;
   font-weight: 500;
 }
 
@@ -120,22 +124,22 @@
   color: #0F2942;
   opacity: 0.4;
   font-size: 10px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .formDivider::before,
 .formDivider::after {
   content: '';
-  width: 40px;
+  width: 44px;
   height: 1px;
   background-color: #0F2942;
-  opacity: 0.3;
+  opacity: 0.25;
 }
 
 .loginForm {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 11px;
 }
 
 .inputGroup {
@@ -152,16 +156,17 @@
 
 .inputField {
   width: 100%;
-  height: 46px;
+  height: 48px;
   padding: 0 44px 0 46px;
-  background-color: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(15, 41, 66, 0.18);
+  background-color: #FFFFFF;
+  border: 1px solid rgba(15, 41, 66, 0.2);
   border-radius: 9999px;
-  font-size: 13.5px;
+  font-size: 14px;
   color: #0F2942;
   outline: none;
   transition: all 0.2s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) inset;
+  box-sizing: border-box;
 }
 
 .inputField:focus {
@@ -185,7 +190,7 @@
 
 .btnEntrar {
   width: 100%;
-  height: 46px;
+  height: 48px;
   margin-top: 4px;
   background: linear-gradient(180deg, #165675 0%, #0F3B52 100%);
   color: #FFFFFF;
@@ -198,13 +203,13 @@
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  box-shadow: 0 6px 16px rgba(15, 59, 82, 0.35);
+  box-shadow: 0 6px 18px rgba(15, 59, 82, 0.35);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .btnEntrar:hover {
   transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(15, 59, 82, 0.45);
+  box-shadow: 0 8px 24px rgba(15, 59, 82, 0.45);
 }
 
 .btnEntrar:disabled {
@@ -218,9 +223,9 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin: 8px 0;
+  margin: 10px 0;
   color: #64748B;
-  font-size: 11.5px;
+  font-size: 12px;
 }
 
 .dividerOu::before,
@@ -233,23 +238,24 @@
 
 .btnCriarConta {
   width: 100%;
-  height: 42px;
-  background-color: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(15, 41, 66, 0.2);
+  height: 44px;
+  background-color: #FFFFFF;
+  border: 1px solid rgba(15, 41, 66, 0.22);
   border-radius: 9999px;
   color: #0F2942;
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .btnCriarConta:hover {
-  background-color: #FFFFFF;
+  background-color: #F8FAFC;
+  border-color: #0F2942;
 }
 
 .errorBox {
@@ -264,4 +270,135 @@
   align-items: center;
   gap: 6px;
   text-align: left;
+}
+
+/* ========================================================
+   RESPONSIVIDADE: TABLETS (768px a 1023px)
+   ======================================================== */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .pageWrapper {
+    padding: 32px 32px;
+    justify-content: flex-end;
+  }
+
+  .cardFrame {
+    max-width: 390px;
+  }
+
+  .headerSky {
+    padding: 26px 20px 20px;
+  }
+
+  .brandTitle {
+    font-size: 38px;
+  }
+
+  .formSection {
+    padding: 22px 24px 22px;
+  }
+}
+
+/* ========================================================
+   RESPONSIVIDADE: CELULARES (< 768px)
+   ======================================================== */
+@media (max-width: 767px) {
+  .pageWrapper {
+    min-height: 100vh;
+    padding: 16px 12px;
+    justify-content: center;
+    align-items: center;
+    background-color: #071E3D;
+    background-image: radial-gradient(circle at 50% 30%, #0F3460 0%, #071E3D 100%);
+    background-attachment: scroll;
+  }
+
+  .cardFrame {
+    max-width: 410px;
+    min-height: 740px;
+    border-radius: 36px;
+    background-color: transparent;
+    box-shadow: 
+      0 20px 50px rgba(0, 0, 0, 0.65),
+      0 4px 12px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
+    justify-content: space-between;
+  }
+
+  /* Exibe a arte vertical do Teatro e Barco apenas no Mobile */
+  .cardBackgroundMobile {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background-image: var(--bg-mobile);
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+    z-index: 1;
+  }
+
+  .cardContent {
+    min-height: 740px;
+    height: 100%;
+    padding: 30px 22px 20px;
+    justify-content: space-between;
+  }
+
+  .headerSky {
+    background: transparent;
+    border-bottom: none;
+    padding: 0;
+    margin-bottom: 0;
+  }
+
+  .brandTitle {
+    font-size: 40px;
+  }
+
+  .brandSubtitle {
+    font-size: 12.5px;
+  }
+
+  /* Posiciona o formulário 100% dentro do pergaminho claro */
+  .formSection {
+    background: transparent;
+    padding: 0 6px 10px;
+    margin-top: auto;
+  }
+
+  .welcomeTitle {
+    font-size: 24px;
+    margin: 0 0 4px;
+    color: #0F2942;
+  }
+
+  .welcomeSubtitle {
+    font-size: 12px;
+    margin: 0 0 8px;
+    color: #475569;
+  }
+
+  .formDivider {
+    margin-bottom: 10px;
+  }
+
+  .loginForm {
+    gap: 9px;
+  }
+
+  .inputField {
+    height: 44px;
+    background-color: rgba(255, 255, 255, 0.94);
+    font-size: 13.5px;
+  }
+
+  .btnEntrar {
+    height: 44px;
+    font-size: 14.5px;
+  }
+
+  .btnCriarConta {
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.88);
+    font-size: 13px;
+  }
 }

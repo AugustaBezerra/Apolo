@@ -17,6 +17,8 @@ export default function LoginCard({ onLoginSuccess }: LoginCardProps) {
   const [erro, setErro] = useState("");
 
   const basePath = process.env.NODE_ENV === "production" ? "/Apolo" : "";
+  const panoramaUrl = `${basePath}/arts/Amazon%20River%20Papercraft%20Panorama.png`;
+  const mobileBgUrl = `${basePath}/arts/apolo_login_bg.png`;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,16 +64,19 @@ export default function LoginCard({ onLoginSuccess }: LoginCardProps) {
   };
 
   return (
-    <div className={styles.pageWrapper}>
+    <div
+      className={styles.pageWrapper}
+      style={
+        {
+          "--bg-panorama": `url('${panoramaUrl}')`,
+          "--bg-mobile": `url('${mobileBgUrl}')`,
+        } as React.CSSProperties
+      }
+    >
       {/* Moldura do Card Paper Craft */}
       <div className={styles.cardFrame}>
-        {/* Camada de Background com a Obra de Arte Amazônica */}
-        <div
-          className={styles.cardBackground}
-          style={{
-            backgroundImage: `url('${basePath}/arts/apolo_login_bg.png')`,
-          }}
-        />
+        {/* Camada de Background específica para Mobile */}
+        <div className={styles.cardBackgroundMobile} />
 
         {/* Conteúdo sobreposto */}
         <div className={styles.cardContent}>
