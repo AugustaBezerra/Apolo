@@ -105,7 +105,7 @@ export default function LoginCard({ onLoginSuccess }: LoginCardProps) {
             </div>
             <h1 className={styles.brandTitle}>Apolo</h1>
             <p className={styles.brandSubtitle}>
-              Seu agente de conversação, sempre por perto.
+              Seu agente de comunicação.
             </p>
             <div className={styles.dividerStar}>✦</div>
           </div>
