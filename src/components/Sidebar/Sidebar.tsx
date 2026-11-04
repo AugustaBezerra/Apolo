@@ -44,7 +44,7 @@ export default function Sidebar({
       </div>
 
       <button onClick={onNewConversation} className={styles.btnNovaConversa}>
-        <Plus size={16} />
+        <span style={{ fontSize: "14px" }}>✦</span>
         <span>Nova conversa</span>
       </button>
 

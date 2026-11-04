@@ -2,8 +2,7 @@
 
 import React, { useState } from "react";
 import styles from "./LoginCard.module.css";
-import { User, Lock, Eye, EyeOff, Sparkles, AlertCircle } from "lucide-react";
-
+import { User, Lock, Eye, EyeOff, UserPlus, AlertCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 interface LoginCardProps {
@@ -16,6 +15,8 @@ export default function LoginCard({ onLoginSuccess }: LoginCardProps) {
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState("");
+
+  const basePath = process.env.NODE_ENV === "production" ? "/Apolo" : "";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,9 +35,11 @@ export default function LoginCard({ onLoginSuccess }: LoginCardProps) {
       });
 
       if (error) {
-        throw new Error(error.message === "Invalid login credentials"
-          ? "Credenciais incorretas. Verifique seu usuário e senha."
-          : error.message);
+        throw new Error(
+          error.message === "Invalid login credentials"
+            ? "Credenciais incorretas. Verifique seu usuário e senha."
+            : error.message
+        );
       }
 
       if (!data.user) {
@@ -59,114 +62,129 @@ export default function LoginCard({ onLoginSuccess }: LoginCardProps) {
   };
 
   return (
-    <div className={styles.wrapper}>
-      {/* Background ilustrado estilo Paper Craft Amazônico */}
-      <div className={styles.decoracaoBackground} />
-      <div className={styles.decoracaoOverlay} />
+    <div className={styles.pageWrapper}>
+      {/* Moldura do Card Paper Craft */}
+      <div className={styles.cardFrame}>
+        {/* Camada de Background com a Obra de Arte Amazônica */}
+        <div
+          className={styles.cardBackground}
+          style={{
+            backgroundImage: `url('${basePath}/arts/apolo_login_bg.png')`,
+          }}
+        />
 
-      <div className={styles.loginCardContainer}>
-        {/* Header Apolo */}
-        <div className={styles.headerApolo}>
-          <div className={styles.logoApolo}>
-            {/* Ícone Bússola/Estrela Guia */}
-            <svg
-              width="36"
-              height="36"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#FDE68A"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polygon points="12 2 15 9 22 12 15 15 12 22 9 15 2 12 9 9 12 2" fill="rgba(253, 230, 138, 0.2)" />
-              <circle cx="12" cy="12" r="3" fill="#FDE68A" />
-            </svg>
+        {/* Conteúdo sobreposto */}
+        <div className={styles.cardContent}>
+          {/* Header Superior no Céu Noturno */}
+          <div className={styles.headerSky}>
+            <div className={styles.starLogo}>
+              <svg width="44" height="44" viewBox="0 0 48 48" fill="none">
+                {/* Anel de Órbita Elíptico */}
+                <ellipse
+                  cx="24"
+                  cy="24"
+                  rx="21"
+                  ry="8"
+                  stroke="rgba(253, 230, 138, 0.75)"
+                  strokeWidth="1.6"
+                  transform="rotate(-26 24 24)"
+                />
+                {/* Estrela Guia de 4 Pontas */}
+                <path
+                  d="M24 3 L26.8 19 L42 24 L26.8 29 L24 45 L21.2 29 L6 24 L21.2 19 Z"
+                  fill="#FFFBEB"
+                  stroke="#FDE68A"
+                  strokeWidth="1"
+                />
+              </svg>
+            </div>
+            <h1 className={styles.brandTitle}>Apolo</h1>
+            <p className={styles.brandSubtitle}>
+              Seu agente de conversação, sempre por perto.
+            </p>
+            <div className={styles.dividerStar}>✦</div>
           </div>
-          <h1 className={styles.tituloApolo}>Apolo</h1>
-          <p className={styles.subtituloApolo}>
-            Seu agente de conversação, sempre por perto.
-          </p>
-        </div>
 
-        {/* Card em Pergaminho Tátil */}
-        <div className={styles.cardPergaminho}>
-          <h2 className={styles.cardTitulo}>Bem-vindo(a)!</h2>
-          <p className={styles.cardDescricao}>
-            Entre para conversar com o Apolo e explorar novas ideias.
-          </p>
+          {/* Seção Inferior no Pergaminho */}
+          <div className={styles.formSection}>
+            <h2 className={styles.welcomeTitle}>Bem-vindo(a)!</h2>
+            <p className={styles.welcomeSubtitle}>
+              Entre para conversar com o Apolo
+              <br />e explorar novas ideias.
+            </p>
 
-          {erro && (
-            <div className={styles.mensagemErro}>
-              <AlertCircle size={16} />
-              <span>{erro}</span>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className={styles.formLogin}>
-            <div className={styles.inputGroup}>
-              <User className={styles.inputIcon} size={18} />
-              <input
-                type="text"
-                className={styles.inputField}
-                placeholder="Usuário ou e-mail"
-                value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
-                required
-                autoComplete="username"
-              />
+            <div className={styles.formDivider}>
+              <span>✦</span>
             </div>
 
-            <div className={styles.inputGroup}>
-              <Lock className={styles.inputIcon} size={18} />
-              <input
-                type={mostrarSenha ? "text" : "password"}
-                className={styles.inputField}
-                placeholder="Senha"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                autoComplete="current-password"
-              />
+            {erro && (
+              <div className={styles.errorBox}>
+                <AlertCircle size={15} />
+                <span>{erro}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className={styles.loginForm}>
+              <div className={styles.inputGroup}>
+                <User className={styles.inputIcon} size={18} />
+                <input
+                  type="text"
+                  className={styles.inputField}
+                  placeholder="Usuário ou e-mail"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  required
+                  autoComplete="username"
+                />
+              </div>
+
+              <div className={styles.inputGroup}>
+                <Lock className={styles.inputIcon} size={18} />
+                <input
+                  type={mostrarSenha ? "text" : "password"}
+                  className={styles.inputField}
+                  placeholder="Senha"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  className={styles.btnEye}
+                  onClick={() => setMostrarSenha(!mostrarSenha)}
+                  title={mostrarSenha ? "Ocultar senha" : "Ver senha"}
+                >
+                  {mostrarSenha ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+
               <button
-                type="button"
-                className={styles.btnOlho}
-                onClick={() => setMostrarSenha(!mostrarSenha)}
-                title={mostrarSenha ? "Ocultar senha" : "Ver senha"}
+                type="submit"
+                className={styles.btnEntrar}
+                disabled={carregando}
               >
-                {mostrarSenha ? <EyeOff size={18} /> : <Eye size={18} />}
+                <span>✦</span>
+                <span>{carregando ? "Entrando..." : "Entrar"}</span>
               </button>
+            </form>
+
+            <div className={styles.dividerOu}>
+              <span>ou</span>
             </div>
 
             <button
-              type="submit"
-              className={styles.botaoEntrar}
-              disabled={carregando}
+              type="button"
+              className={styles.btnCriarConta}
+              onClick={() =>
+                alert(
+                  "Acesso restrito à Karine e equipe de comunicação. As credenciais pré-configuradas são: Usuário: karine | Senha: Apolo2026!"
+                )
+              }
             >
-              <Sparkles size={18} />
-              <span>{carregando ? "Entrando..." : "Entrar"}</span>
+              <UserPlus size={16} />
+              <span>Criar uma conta</span>
             </button>
-          </form>
-
-          <div className={styles.divisorOu}>
-            <span>ou</span>
-          </div>
-
-          <button
-            type="button"
-            className={styles.rodapeLink}
-            onClick={() =>
-              alert(
-                "Acesso exclusivo para Karine e equipe de comunicação da CSOAM. Entre em contato com a coordenação caso precise de novas credenciais."
-              )
-            }
-          >
-            Criar uma conta
-          </button>
-
-          <div className={styles.dicaAcesso}>
-            🔑 <b>Acesso Inicial Pré-configurado:</b><br/>
-            Usuário: <code>karine</code> | Senha: <code>Apolo2026!</code>
           </div>
         </div>
       </div>

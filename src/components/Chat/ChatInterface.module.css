@@ -2,7 +2,7 @@
   display: flex;
   height: 100vh;
   width: 100%;
-  background-color: var(--c-papel-bg);
+  background-color: #071E3D;
   position: relative;
   overflow: hidden;
 }
@@ -13,26 +13,30 @@
   flex-direction: column;
   height: 100%;
   position: relative;
-  background-color: var(--c-papel-bg);
+  background-color: #F8F5EE;
 }
 
+/* Background com a Arte Amazônica de Chat */
 .chatBackground {
   position: absolute;
   inset: 0;
-  background: url('/arts/chat_screen.jpg') center bottom / cover no-repeat;
-  opacity: 0.28;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0.95;
   pointer-events: none;
+  z-index: 1;
 }
 
+/* Header estilizado no topo do céu estrelado */
 .chatHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 24px;
-  background-color: rgba(253, 251, 247, 0.95);
+  padding: 14px 24px;
+  background: linear-gradient(180deg, rgba(7, 30, 61, 0.85) 0%, rgba(7, 30, 61, 0.5) 100%);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--c-papel-borda);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(253, 230, 138, 0.15);
   position: relative;
   z-index: 10;
 }
@@ -44,23 +48,25 @@
 }
 
 .avatarHeader {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  background: radial-gradient(circle, #0A365B 0%, #002B49 100%);
-  border: 1.5px solid var(--c-ouro-suave);
+  background: radial-gradient(circle, #0F3B52 0%, #071E3D 100%);
+  border: 1.5px solid #FDE68A;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .infoApolo h2 {
-  font-family: var(--font-serif);
-  font-size: 19px;
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+  font-size: 20px;
   font-weight: 700;
-  color: var(--c-azul-noite);
+  color: #FFFFFF;
+  margin: 0;
   line-height: 1.2;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 .statusOnline {
@@ -68,7 +74,7 @@
   align-items: center;
   gap: 5px;
   font-size: 12px;
-  color: #059669;
+  color: #34D399;
   font-weight: 500;
 }
 
@@ -76,8 +82,8 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background-color: var(--c-verde-online);
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  background-color: #10B981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
 }
 
 .headerActions {
@@ -87,56 +93,60 @@
 }
 
 .btnAcao {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background-color: #F1EFE7;
-  border: 1px solid var(--c-papel-borda);
-  color: var(--c-azul-noite);
+  background-color: rgba(7, 30, 61, 0.7);
+  border: 1px solid rgba(253, 230, 138, 0.25);
+  color: #FDE68A;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .btnAcao:hover {
-  background-color: #E5DEC9;
+  background-color: rgba(7, 30, 61, 0.9);
+  transform: rotate(15deg);
 }
 
+/* Feed de Mensagens Central */
 .messagesFeed {
   flex: 1;
   overflow-y: auto;
-  padding: 24px 28px;
-  position: relative;
-  z-index: 5;
+  padding: 24px 32px 100px;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 5;
 }
 
 .boasVindasCard {
-  align-self: center;
-  background-color: rgba(253, 251, 247, 0.92);
-  border: 1px solid var(--c-papel-borda);
-  border-radius: 16px;
+  background-color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(15, 41, 66, 0.15);
+  border-radius: 20px;
   padding: 20px 24px;
+  margin: 10px auto 24px;
+  max-width: 620px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   text-align: center;
-  max-width: 480px;
-  margin: 30px 0 20px 0;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
 }
 
 .boasVindasCard h3 {
-  font-family: var(--font-serif);
-  font-size: 17px;
-  color: var(--c-azul-noite);
-  margin-bottom: 6px;
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+  font-size: 18px;
+  color: #0F2942;
+  margin: 0 0 8px;
+  font-weight: 700;
 }
 
 .boasVindasCard p {
-  font-size: 13px;
-  color: var(--c-texto-suave);
+  font-size: 13.5px;
+  color: #475569;
   line-height: 1.5;
+  margin: 0 0 16px;
 }
 
 .sugestoesRapidas {
@@ -144,39 +154,36 @@
   flex-wrap: wrap;
   gap: 8px;
   justify-content: center;
-  margin-top: 14px;
 }
 
 .btnSugestao {
-  background-color: #FFFFFF;
+  padding: 8px 14px;
+  background-color: #F8FAFC;
   border: 1px solid #CBD5E1;
-  border-radius: 20px;
-  padding: 6px 12px;
-  font-size: 12px;
-  color: var(--c-azul-marinho);
+  border-radius: 9999px;
+  font-size: 12.5px;
+  color: #1E293B;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .btnSugestao:hover {
-  border-color: var(--c-ouro-apolo);
-  color: var(--c-ouro-apolo);
+  background-color: #E2E8F0;
   transform: translateY(-1px);
 }
 
 .typingIndicator {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 10px 16px;
-  background-color: var(--c-papel-card);
-  border: 1px solid var(--c-papel-borda);
-  border-radius: 16px;
+  gap: 8px;
+  padding: 8px 14px;
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 9999px;
   width: fit-content;
-  margin-bottom: 16px;
   font-size: 12px;
-  color: #64748B;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  color: #0F2942;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 12px;
 }
 
 .typingDots {
@@ -185,43 +192,45 @@
 }
 
 .typingDots span {
-  width: 5px;
-  height: 5px;
-  background-color: var(--c-ouro-apolo);
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
-  animation: pulso 1.2s infinite ease-in-out;
+  background-color: #0A365B;
+  animation: pulse 1s infinite alternate;
 }
 
 .typingDots span:nth-child(2) {
   animation-delay: 0.2s;
 }
+
 .typingDots span:nth-child(3) {
   animation-delay: 0.4s;
 }
 
-@keyframes pulso {
-  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-  40% { transform: scale(1.1); opacity: 1; }
+@keyframes pulse {
+  0% { opacity: 0.3; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1.2); }
 }
 
+/* Floating Input Bar na base */
 .inputBarWrapper {
-  padding: 14px 24px 20px 24px;
-  background: linear-gradient(180deg, transparent 0%, rgba(244, 238, 221, 0.95) 40%, rgba(244, 238, 221, 1) 100%);
-  position: relative;
-  z-index: 10;
+  position: absolute;
+  bottom: 24px;
+  left: 32px;
+  right: 32px;
+  z-index: 20;
 }
 
 .inputFloatingCard {
-  background-color: #FAF6EE;
-  border: 1px solid #DFD7C2;
-  border-radius: 28px;
-  padding: 6px 10px 6px 18px;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(15, 41, 66, 0.18);
+  border-radius: 9999px;
+  padding: 6px 8px 6px 18px;
   display: flex;
   align-items: center;
   gap: 12px;
-  box-shadow: 
-    0 8px 24px rgba(0, 43, 73, 0.08),
-    0 1px 0 rgba(255, 255, 255, 0.8) inset;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
 }
 
 .btnAnexo {
@@ -232,21 +241,22 @@
   padding: 6px;
   display: flex;
   align-items: center;
+  justify-content: center;
   transition: color 0.2s;
 }
 
 .btnAnexo:hover {
-  color: var(--c-azul-noite);
+  color: #0F2942;
 }
 
 .inputMensagem {
   flex: 1;
-  background: none;
   border: none;
-  outline: none;
+  background: transparent;
   font-size: 14.5px;
-  color: var(--c-texto-escuro);
-  font-family: inherit;
+  color: #0F2942;
+  outline: none;
+  padding: 8px 0;
 }
 
 .inputMensagem::placeholder {
@@ -257,24 +267,22 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(180deg, #0A365B 0%, #002B49 100%);
+  background: linear-gradient(180deg, #165675 0%, #0F3B52 100%);
   border: none;
   color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 43, 73, 0.25);
   transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(15, 59, 82, 0.35);
 }
 
-.btnEnviar:hover {
-  background: linear-gradient(180deg, #0D4573 0%, #00365D 100%);
-  transform: scale(1.04);
+.btnEnviar:hover:not(:disabled) {
+  transform: scale(1.05);
 }
 
 .btnEnviar:disabled {
-  opacity: 0.45;
+  opacity: 0.5;
   cursor: not-allowed;
-  transform: none;
 }

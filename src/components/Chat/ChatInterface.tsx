@@ -43,6 +43,8 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
   const [enviando, setEnviando] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const basePath = process.env.NODE_ENV === "production" ? "/Apolo" : "";
+
   // 1. Carrega histórico de conversas do Supabase
   useEffect(() => {
     carregarConversas();
@@ -269,7 +271,10 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
 
       {/* Área Central de Conversa */}
       <main className={styles.mainChatArea}>
-        <div className={styles.chatBackground} />
+        <div
+          className={styles.chatBackground}
+          style={{ backgroundImage: `url('${basePath}/arts/bg_chat_template_1.png')` }}
+        />
 
         {/* Top Header */}
         <header className={styles.chatHeader}>

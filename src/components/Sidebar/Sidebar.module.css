@@ -53,11 +53,11 @@
 
 .btnNovaConversa {
   width: 100%;
-  padding: 10px 14px;
-  background-color: #E2ECE5;
-  border: 1px solid #C4D9CA;
-  border-radius: 12px;
-  color: #1E3A2F;
+  padding: 10px 18px;
+  background-color: #D5E8D4;
+  border: 1px solid #B8D8B6;
+  border-radius: 9999px;
+  color: #143525;
   font-size: 13.5px;
   font-weight: 600;
   display: flex;
@@ -65,12 +65,12 @@
   gap: 8px;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
   margin-bottom: 24px;
 }
 
 .btnNovaConversa:hover {
-  background-color: #D3E4D8;
+  background-color: #C3DFC2;
   transform: translateY(-1px);
 }
 
