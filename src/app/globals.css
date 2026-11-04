@@ -1,0 +1,59 @@
+:root {
+  /* Paleta Paper Craft Amazônica */
+  --c-azul-noite: #002B49;
+  --c-azul-profundo: #071E3D;
+  --c-azul-marinho: #0A365B;
+  --c-ouro-apolo: #D97706;
+  --c-ouro-suave: #FDE68A;
+  
+  --c-papel-card: #FDFBF7;
+  --c-papel-bg: #F4EEDD;
+  --c-papel-borda: #E5DEC9;
+  --c-papel-sombra: rgba(15, 23, 42, 0.08);
+  
+  --c-verde-user: #D5E8D4;
+  --c-verde-user-borda: #B9D7B8;
+  --c-verde-online: #10B981;
+
+  --c-texto-escuro: #1E293B;
+  --c-texto-suave: #475569;
+  --c-texto-claro: #F8FAFC;
+  --c-placeholder: #94A3B8;
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: 'Georgia', 'Playfair Display', serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-sans);
+  background-color: var(--c-azul-profundo);
+  color: var(--c-texto-escuro);
+  overflow-x: hidden;
+}
+
+/* Scrollbar suave estilo pergaminho */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(244, 238, 221, 0.4);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}

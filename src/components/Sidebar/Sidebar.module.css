@@ -1,0 +1,158 @@
+.sidebar {
+  width: 260px;
+  background-color: rgba(248, 245, 237, 0.95);
+  backdrop-filter: blur(8px);
+  border-right: 1px solid var(--c-papel-borda);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  height: 100%;
+  position: relative;
+  z-index: 20;
+  transition: transform 0.3s ease;
+}
+
+.headerSidebar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #E2E8F0;
+  margin-bottom: 16px;
+}
+
+.logoIcon {
+  width: 32px;
+  height: 32px;
+  background-color: var(--c-azul-noite);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--c-ouro-suave);
+}
+
+.sidebarTitulo {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--c-azul-noite);
+}
+
+.secaoTitulo {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #64748B;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btnNovaConversa {
+  width: 100%;
+  padding: 10px 14px;
+  background-color: #E2ECE5;
+  border: 1px solid #C4D9CA;
+  border-radius: 12px;
+  color: #1E3A2F;
+  font-size: 13.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 24px;
+}
+
+.btnNovaConversa:hover {
+  background-color: #D3E4D8;
+  transform: translateY(-1px);
+}
+
+.listaHistorico {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.itemConversa {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--c-texto-escuro);
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.2s;
+}
+
+.itemConversa:hover {
+  background-color: rgba(226, 232, 240, 0.6);
+}
+
+.itemAtivo {
+  background-color: #FFFFFF;
+  border-color: #CBD5E1;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+  font-weight: 600;
+  color: var(--c-azul-noite);
+}
+
+.rodapeSidebar {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.perfilUsuario {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-azul-noite);
+}
+
+.avatarUser {
+  width: 28px;
+  height: 28px;
+  background-color: #0A365B;
+  color: #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.btnLogout {
+  background: none;
+  border: none;
+  color: #64748B;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: color 0.2s;
+}
+
+.btnLogout:hover {
+  color: #DC2626;
+}

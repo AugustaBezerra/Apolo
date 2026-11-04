@@ -1,0 +1,263 @@
+.wrapper {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--c-azul-profundo);
+  background-image: 
+    radial-gradient(ellipse at 50% 20%, rgba(10, 54, 91, 0.8) 0%, transparent 70%),
+    linear-gradient(180deg, #071E3D 0%, #002B49 100%);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.decoracaoBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/arts/login_screen.jpg') center center / cover no-repeat;
+  opacity: 0.85;
+  filter: contrast(1.05);
+  pointer-events: none;
+}
+
+.decoracaoOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(7, 30, 61, 0.4) 0%, rgba(0, 43, 73, 0.75) 100%);
+  pointer-events: none;
+}
+
+.loginCardContainer {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.headerApolo {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.logoApolo {
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 12px;
+  background: radial-gradient(circle, #0A365B 0%, #002B49 100%);
+  border: 2px solid var(--c-ouro-suave);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  color: #FFFFFF;
+}
+
+.tituloApolo {
+  font-family: var(--font-serif);
+  font-size: 38px;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: -0.5px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.subtituloApolo {
+  font-size: 14px;
+  color: var(--c-ouro-suave);
+  margin-top: 4px;
+  font-weight: 400;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.cardPergaminho {
+  width: 100%;
+  background-color: var(--c-papel-card);
+  border-radius: 24px;
+  padding: 32px 28px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.8) inset;
+  border: 1px solid var(--c-papel-borda);
+  text-align: center;
+  position: relative;
+}
+
+.cardPergaminho::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px dashed rgba(217, 119, 6, 0.25);
+  border-radius: 20px;
+  pointer-events: none;
+}
+
+.cardTitulo {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--c-azul-noite);
+  margin-bottom: 6px;
+}
+
+.cardDescricao {
+  font-size: 13px;
+  color: var(--c-texto-suave);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.formLogin {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+
+.inputGroup {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 14px;
+  color: var(--c-placeholder);
+  pointer-events: none;
+}
+
+.inputField {
+  width: 100%;
+  padding: 13px 42px 13px 44px;
+  background-color: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 12px;
+  font-size: 14px;
+  color: var(--c-texto-escuro);
+  outline: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02) inset;
+}
+
+.inputField:focus {
+  border-color: var(--c-azul-marinho);
+  box-shadow: 0 0 0 3px rgba(10, 54, 91, 0.12);
+}
+
+.btnOlho {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  color: var(--c-placeholder);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+}
+
+.btnOlho:hover {
+  color: var(--c-texto-escuro);
+}
+
+.botaoEntrar {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(180deg, #0A365B 0%, #002B49 100%);
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 15px;
+  border: 1px solid #001E33;
+  border-radius: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 
+    0 4px 10px rgba(0, 43, 73, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.2) inset;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.botaoEntrar:hover {
+  background: linear-gradient(180deg, #0D4573 0%, #00365D 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 43, 73, 0.4);
+}
+
+.botaoEntrar:active {
+  transform: translateY(1px);
+}
+
+.botaoEntrar:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.divisorOu {
+  display: flex;
+  align-items: center;
+  margin: 18px 0 12px;
+  color: var(--c-placeholder);
+  font-size: 12px;
+}
+
+.divisorOu::before,
+.divisorOu::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.divisorOu span {
+  padding: 0 10px;
+}
+
+.rodapeLink {
+  font-size: 13px;
+  color: var(--c-azul-marinho);
+  font-weight: 500;
+  cursor: pointer;
+  background: none;
+  border: none;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.rodapeLink:hover {
+  color: var(--c-ouro-apolo);
+}
+
+.mensagemErro {
+  background-color: #FEE2E2;
+  border: 1px solid #FCA5A5;
+  color: #991B1B;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dicaAcesso {
+  margin-top: 14px;
+  font-size: 12px;
+  color: #64748B;
+  background-color: #F8FAFC;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px dashed #CBD5E1;
+}
