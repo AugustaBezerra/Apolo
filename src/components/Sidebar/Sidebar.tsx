@@ -2,7 +2,7 @@
 
 import React from "react";
 import styles from "./Sidebar.module.css";
-import { MessageSquare, Plus, Clock, LogOut } from "lucide-react";
+import { MessageSquare, Plus, Clock, LogOut, Trash2 } from "lucide-react";
 
 interface Conversation {
   id: string;
@@ -14,6 +14,7 @@ interface SidebarProps {
   conversations: Conversation[];
   activeConversationId: string | null;
   onSelectConversation: (id: string) => void;
+  onDeleteConversation?: (id: string) => void;
   onNewConversation: () => void;
   onLogout: () => void;
   userName: string;
@@ -23,6 +24,7 @@ export default function Sidebar({
   conversations,
   activeConversationId,
   onSelectConversation,
+  onDeleteConversation,
   onNewConversation,
   onLogout,
   userName,
@@ -64,19 +66,37 @@ export default function Sidebar({
           </div>
         ) : (
           conversations.map((c) => (
-            <button
+            <div
               key={c.id}
-              onClick={() => onSelectConversation(c.id)}
-              className={`${styles.itemConversa} ${
+              className={`${styles.itemConversaContainer} ${
                 activeConversationId === c.id ? styles.itemAtivo : ""
               }`}
-              title={c.title}
             >
-              <MessageSquare size={14} style={{ flexShrink: 0 }} />
-              <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-                {c.title}
-              </span>
-            </button>
+              <button
+                type="button"
+                onClick={() => onSelectConversation(c.id)}
+                className={styles.itemConversaBtn}
+                title={c.title}
+              >
+                <MessageSquare size={14} style={{ flexShrink: 0 }} />
+                <span className={styles.itemConversaTexto}>
+                  {c.title}
+                </span>
+              </button>
+              {onDeleteConversation && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDeleteConversation(c.id);
+                  }}
+                  className={styles.btnDeleteConversa}
+                  title="Apagar esta conversa"
+                >
+                  <Trash2 size={13} />
+                </button>
+              )}
+            </div>
           ))
         )}
       </div>

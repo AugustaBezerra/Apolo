@@ -269,6 +269,38 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
     }
   };
 
+  const handleDeleteMessage = async (msgId: string) => {
+    if (!confirm("Deseja realmente apagar esta mensagem?")) return;
+    setMessages((prev) => prev.filter((m) => m.id !== msgId));
+    try {
+      await supabase.from("messages").delete().eq("id", msgId);
+    } catch (e) {
+      console.error("Erro ao apagar mensagem no Supabase:", e);
+    }
+  };
+
+  const handleDeleteConversation = async (convId: string) => {
+    if (!confirm("Deseja apagar toda esta conversa e suas mensagens?")) return;
+    setConversations((prev) => prev.filter((c) => c.id !== convId));
+    if (activeConvId === convId) {
+      setActiveConvId(null);
+      setMessages([
+        {
+          id: `msg_welcome_${Date.now()}`,
+          role: "assistant",
+          content: `Oi, ${user.name}! 🌸 Conversa apagada. Como posso te apoiar agora com o Dr. Cleverson?`,
+          created_at: new Date().toISOString(),
+        },
+      ]);
+    }
+    try {
+      await supabase.from("messages").delete().eq("conversation_id", convId);
+      await supabase.from("conversations").delete().eq("id", convId);
+    } catch (e) {
+      console.error("Erro ao apagar conversa no Supabase:", e);
+    }
+  };
+
   const handleNovaConversa = () => {
     setActiveConvId(null);
     setMessages([
@@ -288,6 +320,7 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
         conversations={conversations}
         activeConversationId={activeConvId}
         onSelectConversation={(id) => setActiveConvId(id)}
+        onDeleteConversation={handleDeleteConversation}
         onNewConversation={handleNovaConversa}
         onLogout={onLogout}
         userName={user.name}
@@ -366,9 +399,11 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
           {messages.map((m) => (
             <MessageBubble
               key={m.id}
+              id={m.id}
               role={m.role}
               content={m.content}
               createdAt={m.created_at}
+              onDelete={handleDeleteMessage}
             />
           ))}
 

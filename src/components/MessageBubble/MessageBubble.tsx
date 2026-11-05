@@ -1,14 +1,22 @@
 import React from "react";
 import styles from "./MessageBubble.module.css";
-import { User, CheckCheck } from "lucide-react";
+import { User, CheckCheck, Trash2 } from "lucide-react";
 
 interface MessageBubbleProps {
+  id: string;
   role: "user" | "assistant";
   content: string;
   createdAt?: string;
+  onDelete?: (id: string) => void;
 }
 
-export default function MessageBubble({ role, content, createdAt }: MessageBubbleProps) {
+export default function MessageBubble({
+  id,
+  role,
+  content,
+  createdAt,
+  onDelete,
+}: MessageBubbleProps) {
   const isAssistant = role === "assistant";
 
   // Formata hora (ex: 14:32)
@@ -151,6 +159,19 @@ export default function MessageBubble({ role, content, createdAt }: MessageBubbl
               <span className={styles.checkmarks} title="Entregue">
                 <CheckCheck size={14} />
               </span>
+            )}
+            {onDelete && (
+              <button
+                type="button"
+                className={styles.btnDeleteMessage}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(id);
+                }}
+                title="Apagar esta mensagem"
+              >
+                <Trash2 size={12} />
+              </button>
             )}
           </div>
         </div>
