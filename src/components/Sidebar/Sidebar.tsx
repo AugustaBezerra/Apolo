@@ -27,13 +27,17 @@ export default function Sidebar({
   onLogout,
   userName,
 }: SidebarProps) {
+  const basePath = process.env.NODE_ENV === "production" ? "/Apolo" : "";
+
   return (
     <aside className={styles.sidebar}>
       <div className={styles.headerSidebar}>
         <div className={styles.logoIcon}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FDE68A" strokeWidth="2">
-            <polygon points="12 2 15 9 22 12 15 15 12 22 9 15 2 12 9 9 12 2" fill="rgba(253, 230, 138, 0.4)" />
-          </svg>
+          <img
+            src={`${basePath}/arts/apolo_avatar.png`}
+            alt="Apolo"
+            className={styles.avatarSidebarImg}
+          />
         </div>
         <span className={styles.sidebarTitulo}>Apolo</span>
       </div>

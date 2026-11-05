@@ -280,10 +280,11 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
         <header className={styles.chatHeader}>
           <div className={styles.headerLeft}>
             <div className={styles.avatarHeader}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FDE68A" strokeWidth="2">
-                <polygon points="12 2 15 9 22 12 15 15 12 22 9 15 2 12 9 9 12 2" fill="rgba(253, 230, 138, 0.4)" />
-                <circle cx="12" cy="12" r="3" fill="#FDE68A" />
-              </svg>
+              <img
+                src={`${basePath}/arts/apolo_avatar.png`}
+                alt="Apolo"
+                className={styles.avatarHeaderImg}
+              />
             </div>
             <div className={styles.infoApolo}>
               <h2>Apolo</h2>

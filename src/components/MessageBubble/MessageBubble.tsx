@@ -22,6 +22,7 @@ export default function MessageBubble({ role, content, createdAt }: MessageBubbl
     }
   };
 
+  const basePath = process.env.NODE_ENV === "production" ? "/Apolo" : "";
   const horaFormatada = formatarHora(createdAt) || new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
   return (
@@ -29,10 +30,11 @@ export default function MessageBubble({ role, content, createdAt }: MessageBubbl
       <div className={styles.messageWrapper}>
         {isAssistant && (
           <div className={styles.avatarApolo} title="Apolo">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FDE68A" strokeWidth="2">
-              <polygon points="12 2 15 9 22 12 15 15 12 22 9 15 2 12 9 9 12 2" fill="rgba(253, 230, 138, 0.4)" />
-              <circle cx="12" cy="12" r="2.5" fill="#FDE68A" />
-            </svg>
+            <img
+              src={`${basePath}/arts/apolo_avatar.png`}
+              alt="Apolo"
+              className={styles.avatarBubbleImg}
+            />
           </div>
         )}
 

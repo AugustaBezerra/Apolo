@@ -82,26 +82,12 @@ export default function LoginCard({ onLoginSuccess }: LoginCardProps) {
         <div className={styles.cardContent}>
           {/* Header Superior no Céu Noturno */}
           <div className={styles.headerSky}>
-            <div className={styles.starLogo}>
-              <svg width="44" height="44" viewBox="0 0 48 48" fill="none">
-                {/* Anel de Órbita Elíptico */}
-                <ellipse
-                  cx="24"
-                  cy="24"
-                  rx="21"
-                  ry="8"
-                  stroke="rgba(253, 230, 138, 0.75)"
-                  strokeWidth="1.6"
-                  transform="rotate(-26 24 24)"
-                />
-                {/* Estrela Guia de 4 Pontas */}
-                <path
-                  d="M24 3 L26.8 19 L42 24 L26.8 29 L24 45 L21.2 29 L6 24 L21.2 19 Z"
-                  fill="#FFFBEB"
-                  stroke="#FDE68A"
-                  strokeWidth="1"
-                />
-              </svg>
+            <div className={styles.avatarLogo}>
+              <img
+                src={`${basePath}/arts/apolo_avatar.png`}
+                alt="Mascote Apolo"
+                className={styles.avatarImg}
+              />
             </div>
             <h1 className={styles.brandTitle}>Apolo</h1>
             <p className={styles.brandSubtitle}>
