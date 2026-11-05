@@ -80,6 +80,72 @@
   word-break: break-word;
 }
 
+.paragraphBlock {
+  margin-bottom: 8px;
+}
+
+.paragraphBlock:last-child {
+  margin-bottom: 0;
+}
+
+.boldText {
+  font-weight: 700;
+  color: inherit;
+}
+
+.italicText {
+  font-style: italic;
+  opacity: 0.95;
+}
+
+.inlineCode {
+  font-family: monospace;
+  background-color: rgba(0, 0, 0, 0.06);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.92em;
+}
+
+.bulletItem, .numberedItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 3px 0;
+  line-height: 1.45;
+}
+
+.bulletDot {
+  color: var(--c-ouro-escuro, #D97706);
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.itemNumber {
+  color: var(--c-ouro-escuro, #D97706);
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.itemText {
+  flex: 1;
+}
+
+.headingItem {
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+  font-size: 15.5px;
+  font-weight: 700;
+  color: #002B49;
+  margin: 6px 0 3px;
+}
+
+.dividerLine {
+  height: 1px;
+  background-color: rgba(15, 41, 66, 0.15);
+  margin: 10px 0;
+}
+
 .bubbleFooter {
   display: flex;
   align-items: center;

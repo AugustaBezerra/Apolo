@@ -200,37 +200,62 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
       const data = await res.json();
       const respostaTexto = data.reply || "Olá! Não consegui formular a resposta agora. Pode repetir?";
 
-      // 3. Mensagem do assistente
+      // 3. Efeito conversacional fluido: digita a resposta em tempo real
       const assistMsgId = `msg_${Date.now()}_a`;
       const assistMsgObj: Message = {
         id: assistMsgId,
         role: "assistant",
-        content: respostaTexto,
+        content: "",
         created_at: new Date().toISOString(),
       };
 
       setMessages((prev) => [...prev, assistMsgObj]);
+      setEnviando(false);
 
-      // Grava resposta do Apolo no Supabase
-      if (convId) {
-        await supabase.from("messages").insert([
-          {
-            id: assistMsgId,
-            conversation_id: convId,
-            role: "assistant",
-            content: respostaTexto,
-          },
-        ]);
+      const words = respostaTexto.match(/(\S+\s*|\s+)/g) || [respostaTexto];
+      let currentIndex = 0;
+      let currentText = "";
 
-        await supabase
-          .from("conversations")
-          .update({ updated_at: new Date().toISOString() })
-          .eq("id", convId);
-      }
+      const interval = setInterval(() => {
+        if (currentIndex < words.length) {
+          const chunk = words.slice(currentIndex, currentIndex + 2).join("");
+          currentIndex += 2;
+          currentText += chunk;
 
-      if (novaConversaCriada) {
-        carregarConversas();
-      }
+          setMessages((prev) =>
+            prev.map((m) => (m.id === assistMsgId ? { ...m, content: currentText } : m))
+          );
+        } else {
+          clearInterval(interval);
+          setMessages((prev) =>
+            prev.map((m) => (m.id === assistMsgId ? { ...m, content: respostaTexto } : m))
+          );
+
+          // Grava resposta completa no Supabase
+          if (convId) {
+            supabase
+              .from("messages")
+              .insert([
+                {
+                  id: assistMsgId,
+                  conversation_id: convId,
+                  role: "assistant",
+                  content: respostaTexto,
+                },
+              ])
+              .then(() => {
+                supabase
+                  .from("conversations")
+                  .update({ updated_at: new Date().toISOString() })
+                  .eq("id", convId);
+              });
+          }
+
+          if (novaConversaCriada) {
+            carregarConversas();
+          }
+        }
+      }, 25);
     } catch (err) {
       console.error("Erro ao comunicar com o Apolo Vertex AI:", err);
       const erroMsg: Message = {
@@ -240,7 +265,6 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
         created_at: new Date().toISOString(),
       };
       setMessages((prev) => [...prev, erroMsg]);
-    } finally {
       setEnviando(false);
     }
   };

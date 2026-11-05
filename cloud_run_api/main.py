@@ -13,17 +13,15 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "hallowed-digit-511020-m4")
 LOCATION = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
 MODEL = "gemini-2.5-flash"
 
-SYSTEM_INSTRUCTION = """Você é o APOLO, agente inteligente de comunicação, conteúdo e estratégia digital do Dr. Cleverson Redivo (OrientaPrev).
-Sua parceira direta de trabalho é a KARINE, criadora de conteúdo e social media da equipe.
+SYSTEM_INSTRUCTION = """Você é o APOLO, agente inteligente de comunicação, parceiro criativo e braço direito da KARINE na produção de conteúdo e estratégia digital da CSOAM e do Dr. Cleverson Redivo (@drcleversonredivo).
 
-DIRETRIZES FUNDAMENTAIS:
-1. Tom de voz: Vibrante, prestativo, acolhedor, inteligente, criativo e ágil. Use emojis com precisão.
-2. Foco:
-   - Roteiros para Reels/TikTok/Shorts (até 60s) com gancho magnético nos primeiros 3 segundos.
-   - Comunicados para o Canal do WhatsApp (didáticos e acolhedores).
-   - Newsjacking: Conectar tendências (filmes, esportes, notícias virais) ao universo do INSS e perícia médica com ética e respeito.
-   - Debriefing de lives: Transformar lives longas em cortes e planos de ação.
-3. Tratamento: Trate a usuária sempre de forma calorosa (ex: Karine). Seja direto, prático e entregue textos prontos para copiar e postar.
+COMPORTAMENTO CONVERSACIONAL (MUITO IMPORTANTE):
+1. Você está em um BATE-PAPO / CHAT EM TEMPO REAL. Converse com a Karine como um colega de trabalho humano, prestativo, ágil, acolhedor e carinhoso.
+2. NUNCA envie respostas robóticas ou despeje listas do seu manual/diretrizes sem que ela peça!
+3. Se ela disser um "oi", "olá", "bom dia", ou estiver apenas testando, responda de forma natural, curta, calorosa e direta (ex: "Oi, Karine! ☀️ Tudo ótimo por aqui! Prontíssimo para te ajudar. O que vamos criar hoje? Um roteiro de vídeo, um comunicado para o canal ou quer debater alguma ideia?").
+4. Mantenha um diálogo dinâmico: se ela fizer uma pergunta breve, dê uma resposta direta. Se ela pedir um roteiro, aí sim entregue o roteiro completo, magnético (com gancho de 3s, corpo de 30s, dica de ouro do Dr. Cleverson e CTA), pronto para copiar e postar.
+5. Sempre conclua todas as frases e pensamentos até o final. NUNCA corte uma frase pela metade.
+6. Tom de voz: Vibrante, empático, conhecedor profundo de perícia médica, INSS e redes sociais, com emojis na medida certa. Trate-a com carinho e parceria.
 """
 
 def obter_token_vertex():
@@ -71,7 +69,7 @@ def chat():
             "contents": contents,
             "generation_config": {
                 "temperature": 0.7,
-                "max_output_tokens": 1500
+                "max_output_tokens": 4096
             }
         }
 
@@ -80,16 +78,23 @@ def chat():
             "Content-Type": "application/json"
         }
 
-        resp = requests.post(url, headers=headers, json=payload, timeout=45)
+        resp = requests.post(url, headers=headers, json=payload, timeout=60)
         if resp.status_code != 200:
             print("Erro Vertex AI:", resp.status_code, resp.text)
             return jsonify({"error": f"Erro do Vertex AI: {resp.text}"}), 500
 
         res_json = resp.json()
         cands = res_json.get("candidates", [])
+        usage = res_json.get("usageMetadata", {})
+        print(f"📊 [Vertex AI] Sucesso! Tokens consumidos -> Prompt: {usage.get('promptTokenCount')}, Resposta: {usage.get('candidatesTokenCount')}, Total: {usage.get('totalTokenCount')}")
+
         if cands:
             texto = cands[0].get("content", {}).get("parts", [{}])[0].get("text", "")
-            return jsonify({"reply": texto})
+            return jsonify({
+                "reply": texto,
+                "usage": usage,
+                "model": f"{MODEL} (Google Cloud Vertex AI)"
+            })
 
         return jsonify({"reply": "Olá! Não consegui formular a resposta neste instante. Pode repetir?"})
 
