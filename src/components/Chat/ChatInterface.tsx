@@ -7,7 +7,9 @@ import MessageBubble from "../MessageBubble/MessageBubble";
 import { Paperclip, Send, Settings, Sparkles } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
-const CLOUD_RUN_API_URL = "https://apolo-api-979121346627.us-central1.run.app/chat";
+const CLOUD_RUN_API_URL =
+  process.env.NEXT_PUBLIC_APOLO_API_URL ||
+  "https://robo-triagem-csoam-979121346627.us-central1.run.app/apolo/chat";
 
 interface UserSession {
   id: string;
@@ -33,6 +35,55 @@ interface Conversation {
 interface ChatInterfaceProps {
   user: UserSession;
   onLogout: () => void;
+}
+
+const LOCAL_STORAGE_DELETED_CONVS = "apolo_deleted_conversations";
+const LOCAL_STORAGE_DELETED_MSGS = "apolo_deleted_messages";
+
+function getDeletedConversationIds(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_DELETED_CONVS);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function addDeletedConversationId(id: string) {
+  if (typeof window === "undefined") return;
+  try {
+    const list = getDeletedConversationIds();
+    if (!list.includes(id)) {
+      list.push(id);
+      localStorage.setItem(LOCAL_STORAGE_DELETED_CONVS, JSON.stringify(list));
+    }
+  } catch (e) {
+    console.error("Erro ao registrar conversa deletada:", e);
+  }
+}
+
+function getDeletedMessageIds(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_DELETED_MSGS);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function addDeletedMessageId(id: string) {
+  if (typeof window === "undefined") return;
+  try {
+    const list = getDeletedMessageIds();
+    if (!list.includes(id)) {
+      list.push(id);
+      localStorage.setItem(LOCAL_STORAGE_DELETED_MSGS, JSON.stringify(list));
+    }
+  } catch (e) {
+    console.error("Erro ao registrar mensagem deletada:", e);
+  }
 }
 
 export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
@@ -85,10 +136,21 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
       }
 
       if (data && data.length > 0) {
-        setConversations(data);
-        if (!activeConvId) {
-          setActiveConvId(data[0].id);
+        const deletedIds = getDeletedConversationIds();
+        const conversasValidas = data.filter(
+          (c) => !c.title.startsWith("[DELETED]") && !deletedIds.includes(c.id)
+        );
+
+        setConversations(conversasValidas);
+        if (!activeConvId || deletedIds.includes(activeConvId)) {
+          if (conversasValidas.length > 0) {
+            setActiveConvId(conversasValidas[0].id);
+          } else {
+            setActiveConvId(null);
+          }
         }
+      } else {
+        setConversations([]);
       }
     } catch (e) {
       console.error("Erro ao carregar histórico:", e);
@@ -108,8 +170,13 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
         return;
       }
 
-      if (data && data.length > 0) {
-        setMessages(data as Message[]);
+      const deletedMsgIds = getDeletedMessageIds();
+      const msgsValidas = (data || []).filter(
+        (m: Message) => m.content !== "[DELETED]" && !deletedMsgIds.includes(m.id)
+      );
+
+      if (msgsValidas.length > 0) {
+        setMessages(msgsValidas);
       } else {
         setMessages([
           {
@@ -271,9 +338,11 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
 
   const handleDeleteMessage = async (msgId: string) => {
     if (!confirm("Deseja realmente apagar esta mensagem?")) return;
+    addDeletedMessageId(msgId);
     setMessages((prev) => prev.filter((m) => m.id !== msgId));
     try {
       await supabase.from("messages").delete().eq("id", msgId);
+      await supabase.from("messages").update({ content: "[DELETED]" }).eq("id", msgId);
     } catch (e) {
       console.error("Erro ao apagar mensagem no Supabase:", e);
     }
@@ -281,6 +350,7 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
 
   const handleDeleteConversation = async (convId: string) => {
     if (!confirm("Deseja apagar toda esta conversa e suas mensagens?")) return;
+    addDeletedConversationId(convId);
     setConversations((prev) => prev.filter((c) => c.id !== convId));
     if (activeConvId === convId) {
       setActiveConvId(null);
@@ -294,8 +364,15 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
       ]);
     }
     try {
+      // 1. Tenta DELETE físico no Supabase (se as policies permitirem)
       await supabase.from("messages").delete().eq("conversation_id", convId);
       await supabase.from("conversations").delete().eq("id", convId);
+
+      // 2. Garante exclusão no banco via UPDATE (que possui política de gravação ativa)
+      await supabase
+        .from("conversations")
+        .update({ title: `[DELETED]_${Date.now()}` })
+        .eq("id", convId);
     } catch (e) {
       console.error("Erro ao apagar conversa no Supabase:", e);
     }

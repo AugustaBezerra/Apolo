@@ -32,6 +32,13 @@
       "estrategia": "Aproveitar assuntos que estão em alta no Brasil (filmes, séries, novelas, lesões de atletas famosos, futebol) e conectar com saúde, perícia e direitos dos segurados."
     }
   },
+  "preferencias_agendamento": {
+    "tema_preferencial": "geral",
+    "horario_preferencial": "08:00 (Manaus)",
+    "dias_semana": ["segunda-feira", "diario"],
+    "observacoes": "Pautas de alto engajamento em perícia médica e INSS para Karine e Dr. Cleverson.",
+    "atualizado_em": "2026-11-06T09:00:00"
+  },
   "historico_aprendizado": [
     {
       "data": "2026-11-03",
@@ -42,6 +49,11 @@
       "data": "2026-11-04",
       "evento": "Configuração dos Comunicados Diários para o Canal do WhatsApp",
       "aprendizado": "Disparo diário de 2 comunicados matinais às 08h Manaus para o Dr. Cleverson, Karine e Augusta."
+    },
+    {
+      "data": "2026-11-06",
+      "evento": "Unificação Apolo Nuvem (Cloud Run) + Web Apolo com Function Calling",
+      "aprendizado": "Agendamento 100% sob Cloud Scheduler (sem threads duplicadas em contêiner). Apolo capacitado a disparar e-mails, relatórios ReportLab e gravar preferências editoriais da Karine em tempo real pelo chat."
     }
   ]
 }
