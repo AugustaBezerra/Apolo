@@ -446,28 +446,34 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
         <div className={styles.messagesFeed}>
           {messages.length === 1 && (
             <div className={styles.boasVindasCard}>
-              <h3>☀️ Co-Piloto de Redes Sociais do Dr. Cleverson</h3>
+              <h3>☀️ Radar Criativo de Tendências & Co-Piloto de Conteúdo</h3>
               <p>
-                Pronto para gerar roteiros com ganchos de 3 segundos, comunicados para o WhatsApp ou conectar trends de filmes e esportes!
+                Conectado em tempo real com busca no Google para mapear o que está bombando nas redes agora (TikTok, Reels, Memes, Séries e Notícias) e criar roteiros de alto engajamento!
               </p>
               <div className={styles.sugestoesRapidas}>
                 <button
                   className={styles.btnSugestao}
-                  onClick={() => setInputTexto("Apolo, me dê 2 ideias de vídeos virais conectando lesões de futebol com o INSS")}
+                  onClick={() => setInputTexto("Apolo, quais são as principais trends, memes e assuntos que mais estão bombando nas redes sociais no Brasil hoje?")}
                 >
-                  ⚽ Trend de Esportes & INSS
+                  🔥 Trends em Alta no Brasil Hoje
                 </button>
                 <button
                   className={styles.btnSugestao}
-                  onClick={() => setInputTexto("Me gere um comunicado para o Canal do WhatsApp sobre a regra da Hérnia de Disco")}
+                  onClick={() => setInputTexto("Apolo, me dê 3 ideias de vídeos virais de alto engajamento usando trends gerais do momento!")}
+                >
+                  🎬 Ideias de Vídeos Virais (Gerais)
+                </button>
+                <button
+                  className={styles.btnSugestao}
+                  onClick={() => setInputTexto("Apolo, pegue um assunto quente em alta hoje e mostre como o Dr. Cleverson pode comentar com um gancho magnético de 3 segundos!")}
+                >
+                  ⚡ Conectar Trend ao Dr. Cleverson
+                </button>
+                <button
+                  className={styles.btnSugestao}
+                  onClick={() => setInputTexto("Me gere um comunicado envolvente para o Canal do WhatsApp com uma dica ou novidade quente da semana")}
                 >
                   📢 Comunicado Canal WhatsApp
-                </button>
-                <button
-                  className={styles.btnSugestao}
-                  onClick={() => setInputTexto("Crie um roteiro de Reels de 60s desmistificando o 'CID não é incapacidade'")}
-                >
-                  🎬 Roteiro de Reels 60s
                 </button>
               </div>
             </div>
