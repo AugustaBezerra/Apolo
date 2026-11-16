@@ -54,6 +54,18 @@
       "data": "2026-11-06",
       "evento": "Unificação Apolo Nuvem (Cloud Run) + Web Apolo com Function Calling",
       "aprendizado": "Agendamento 100% sob Cloud Scheduler (sem threads duplicadas em contêiner). Apolo capacitado a disparar e-mails, relatórios ReportLab e gravar preferências editoriais da Karine em tempo real pelo chat."
+    },
+    {
+      "data": "2026-11-16",
+      "evento": "Oficialização do Motor de Personalização e Social DRM de Livros do Dr. Cleverson",
+      "aprendizado": "Apolo agora possui o módulo oficial de personalização de livros e proteção anti-pirataria (Opção 1 aprovada pelo Dr. Cleverson): carimbo vermelho no topo com nome/CPF do comprador e selo do cadeado de uso exclusivo e restrito ao fundo (sem o símbolo do Orienta). Os livros gerados ficam em /home/augusta/Documents/Comunicação/livros/livros_personalizados/."
     }
-  ]
+  ],
+  "ferramentas_disponiveis": {
+    "personalizador_livros": {
+      "descricao": "Gera livros em PDF personalizados para pacientes e compradores com Social DRM (marca d'água de uso exclusivo e cabeçalho vermelho de licenciamento)",
+      "script": "/home/augusta/Documents/Comunicação/livros/personalizador_livro.py",
+      "pasta_saida": "/home/augusta/Documents/Comunicação/livros/livros_personalizados/"
+    }
+  }
 }
