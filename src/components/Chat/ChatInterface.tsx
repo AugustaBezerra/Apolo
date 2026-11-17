@@ -92,9 +92,85 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputTexto, setInputTexto] = useState("");
   const [enviando, setEnviando] = useState(false);
+  const [uploadingLivro, setUploadingLivro] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const basePath = process.env.NODE_ENV === "production" ? "/Apolo" : "";
+
+  // Upload de novas matrizes de livro via clipe (📎)
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.name.toLowerCase().endsWith(".pdf")) {
+      alert("Por favor, selecione um arquivo em formato PDF.");
+      return;
+    }
+
+    setUploadingLivro(true);
+    let convId = activeConvId;
+
+    if (!convId) {
+      convId = `conv_${Date.now()}`;
+      const { error: convErr } = await supabase.from("conversations").insert([
+        {
+          id: convId,
+          user_id: user.id,
+          title: `Livro: ${file.name.substring(0, 20)}`,
+        },
+      ]);
+      if (!convErr) {
+        setActiveConvId(convId);
+      }
+    }
+
+    const userMsgId = `msg_${Date.now()}_u`;
+    const userMsgObj: Message = {
+      id: userMsgId,
+      role: "user",
+      content: `📎 **Anexando nova matriz de livro:** \`${file.name}\` (${(file.size / (1024 * 1024)).toFixed(1)} MB)`,
+      created_at: new Date().toISOString(),
+    };
+    setMessages((prev) => [...prev, userMsgObj]);
+
+    try {
+      const uploadUrl = CLOUD_RUN_API_URL.replace("/apolo/chat", "/apolo/livros/upload");
+      const res = await fetch(uploadUrl, {
+        method: "POST",
+        headers: {
+          "X-File-Name": encodeURIComponent(file.name),
+        },
+        body: file,
+      });
+
+      const data = await res.json();
+      const respostaTexto = data.mensagem || `Livro matriz "${file.name}" cadastrado com sucesso!`;
+
+      const assistMsgId = `msg_${Date.now()}_a`;
+      const assistMsgObj: Message = {
+        id: assistMsgId,
+        role: "assistant",
+        content: `📚 **Biblioteca Apolo Atualizada!**\n\n${respostaTexto}\n\nAgora você pode me pedir: *"Apolo, personaliza o livro ${file.name.replace('.pdf', '')} para [Nome do Paciente], CPF [000.000.000-00]"* que eu gero o exemplar carimbado em todas as páginas com o cabeçalho vermelho e o selo do Dr. Cleverson na hora! ✨`,
+        created_at: new Date().toISOString(),
+      };
+      setMessages((prev) => [...prev, assistMsgObj]);
+    } catch (err) {
+      console.error("Erro no upload do livro:", err);
+      const errMsgObj: Message = {
+        id: `msg_${Date.now()}_a`,
+        role: "assistant",
+        content: `⚠️ Não consegui enviar o arquivo "${file.name}". Verifique sua conexão e tente novamente.`,
+        created_at: new Date().toISOString(),
+      };
+      setMessages((prev) => [...prev, errMsgObj]);
+    } finally {
+      setUploadingLivro(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
 
   // 1. Carrega histórico de conversas do Supabase
   useEffect(() => {
@@ -490,10 +566,14 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
             />
           ))}
 
-          {enviando && (
+          {(enviando || uploadingLivro) && (
             <div className={styles.typingIndicator}>
               <Sparkles size={14} color="#D97706" />
-              <span>Apolo está formulando a melhor ideia...</span>
+              <span>
+                {uploadingLivro
+                  ? "Apolo está processando e registrando a nova matriz do livro na biblioteca..."
+                  : "Apolo está formulando a melhor ideia..."}
+              </span>
               <div className={styles.typingDots}>
                 <span />
                 <span />
@@ -508,11 +588,19 @@ export default function ChatInterface({ user, onLogout }: ChatInterfaceProps) {
         {/* Input Bar Flutuante */}
         <div className={styles.inputBarWrapper}>
           <form onSubmit={handleEnviar} className={styles.inputFloatingCard}>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileSelect}
+              accept=".pdf"
+              style={{ display: "none" }}
+            />
             <button
               type="button"
               className={styles.btnAnexo}
-              title="Anexar pauta ou arquivo"
-              onClick={() => alert("Upload de briefing em PDF ou imagem disponível.")}
+              title="Anexar nova matriz de livro (PDF)"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={enviando || uploadingLivro}
             >
               <Paperclip size={20} />
             </button>

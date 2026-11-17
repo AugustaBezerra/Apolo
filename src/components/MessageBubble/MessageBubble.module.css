@@ -181,3 +181,32 @@
   color: #EF4444;
   background-color: rgba(239, 68, 68, 0.1);
 }
+
+.chatLink {
+  color: #0284C7;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.downloadCardLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+  color: #FFFFFF !important;
+  font-weight: 700;
+  font-size: 13.5px;
+  padding: 8px 16px;
+  margin: 6px 0;
+  border-radius: 9999px;
+  text-decoration: none;
+  box-shadow: 0 3px 10px rgba(185, 28, 28, 0.25);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.downloadCardLink:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 5px 14px rgba(185, 28, 28, 0.35);
+  background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
+}

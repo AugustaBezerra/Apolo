@@ -36,7 +36,7 @@ export default function MessageBubble({
   // Formatação rica de Markdown para o chat (negrito, itálico, listas, divisores)
   const renderInlineFormatting = (str: string) => {
     const parts: (string | React.ReactNode)[] = [];
-    const regex = /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g;
+    const regex = /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g;
     let lastIndex = 0;
     let match;
 
@@ -63,6 +63,24 @@ export default function MessageBubble({
             {token.slice(1, -1)}
           </code>
         );
+      } else if (token.startsWith("[") && token.includes("](") && token.endsWith(")")) {
+        const linkMatch = token.match(/^\[(.*?)\]\((.*?)\)$/);
+        if (linkMatch) {
+          const [, label, url] = linkMatch;
+          const isDownload = url.includes("/download") || url.toLowerCase().endsWith(".pdf");
+          parts.push(
+            <a
+              key={match.index}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={isDownload ? styles.downloadCardLink : styles.chatLink}
+              download={isDownload ? true : undefined}
+            >
+              {isDownload && !label.includes("📥") ? `📥 ${label}` : label}
+            </a>
+          );
+        }
       }
       lastIndex = regex.lastIndex;
     }
